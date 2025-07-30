@@ -1,0 +1,47 @@
+[
+    {
+        "bookName": "White Nights",
+        "author": 1,
+        "quantity": 25,
+        "description": "White Nights by Fyodor Dostoevsky",
+        "published": "2003-01-01T00:00:00Z",
+        "page": 60,
+        "bookLanguage": 1
+    },
+    {
+        "bookName": "Crime and Punishment",
+        "author": 1,
+        "quantity": 15,
+        "description": "Crime and Punishment by Fyodor Dostoevsky",
+        "published": "1866-01-01T00:00:00Z",
+        "page": 671,
+        "bookLanguage": 1
+    },
+    {
+        "bookName": "The Great Gatsby",
+        "author": 2,
+        "quantity": 40,
+        "description": "The Great Gatsby by F. Scott Fitzgerald",
+        "published": "1925-04-10T00:00:00Z",
+        "page": 218,
+        "bookLanguage": 1
+    },
+    {
+        "bookName": "War and Peace",
+        "author": 3,
+        "quantity": 10,
+        "description": "War and Peace by Leo Tolstoy",
+        "published": "1869-01-01T00:00:00Z",
+        "page": 1225,
+        "bookLanguage": 1
+    },
+    {
+        "bookName": "Pride and Prejudice",
+        "author": 4,
+        "quantity": 30,
+        "description": "Pride and Prejudice by Jane Austen",
+        "published": "1813-01-28T00:00:00Z",
+        "page": 432,
+        "bookLanguage": 1
+    }
+]

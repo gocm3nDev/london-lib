@@ -1,0 +1,41 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+.bg-custom {
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    text-align: center;
+}
+.error-container {
+    padding: 2rem;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+.error-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 6rem;
+    font-weight: 700;
+    color: #e9ecef;
+    text-shadow: 0 0 10px #e9ecef, 0 0 20px #e9ecef, 0 0 30px #e9ecef;
+}
+.error-title .bi-gear-wide-connected {
+    display: inline-block;
+    animation: spin 8s linear infinite;
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.lead-text {
+    color: #adb5bd;
+}

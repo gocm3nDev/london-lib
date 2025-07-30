@@ -161,6 +161,33 @@ func removeBookById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "customer deleted successfully"})
 }
 
+func insertLanguage(ctx *gin.Context) {
+	db := ConnectDB()
+	defer db.Close()
+
+	var language models.Language
+
+	err := ctx.ShouldBind(&language)
+	if err != nil {
+		ctx.HTML(http.StatusInternalServerError, "500.html", gin.H{"message": err.Error()})
+		return
+	}
+
+	fmt.Printf("%v\n", language.Name)
+
+	result, err := db.Exec(`Insert INTO public."Languages" ("name") values ($1)`, language.Name)
+
+	if err != nil {
+		log.Println("Insert Error", err)
+		return
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	fmt.Println("Inserted rows", rowsAffected)
+
+	ctx.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("%d row(s) inserted", rowsAffected)})
+}
+
 func insertAuthor(ctx *gin.Context) {
 	db := ConnectDB()
 	defer db.Close()
@@ -236,6 +263,7 @@ func main() {
 	router.GET("/books/:id", getBookById)
 	router.POST("/books", insertBook)
 	router.POST("/authors", insertAuthor)
+	router.POST("/languages", insertLanguage)
 	router.DELETE("/books/:id", removeBookById)
 
 	router.GET("/authors", getAllAuthors)

@@ -1,21 +1,21 @@
 package main
 
 import (
-	"database/sql"
-	"errors"
-	"fmt"
-	"log"
-	"london-lib-API/models"
-	"net/http"
-	"strconv"
+	"database/sql"          // SQL veritabanı işlemleri
+	"errors"                // Hata oluşturma
+	"fmt"                   // Ekrana yazdırma, string formatlama
+	"log"                   // Loglama
+	"london-lib-API/models" // Projedeki veri modelleri
+	"net/http"              // HTTP işlemleri
+	"strconv"               // String - sayı dönüşümleri
 
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
+	"github.com/gin-contrib/cors" // CORS ayarları
+	"github.com/gin-gonic/gin"    // Web/API framework
+	_ "github.com/lib/pq"         // PostgreSQL sürücüsü
 )
 
 func ConnectDB() *sql.DB {
-	const (
+	const ( // Bağlantı parametreleri
 		host     = "localhost"
 		port     = 5432
 		user     = "postgres"
@@ -23,14 +23,15 @@ func ConnectDB() *sql.DB {
 		dbname   = "dbLondonLib"
 	)
 
+	// Parametreleri string olarak gönder
 	psqlInfo := fmt.Sprintf("host= %s port= %d user= %s password= %s dbname= %s sslmode=disable", host, port, user, password, dbname)
 
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
+	db, err := sql.Open("postgres", psqlInfo) // Verilen parametreler ile bağlanmaya çalış
+	if err != nil {                           // Bağlanamazsa hata döndür
 		log.Fatal("Connection failed")
 	}
 
-	err = db.Ping()
+	err = db.Ping() // Bağlantının doğru şekilde sağlanıp sağlanmadığını kontrol etmek içi ping at
 	if err != nil {
 		log.Fatal("Ping failed")
 	}
@@ -71,9 +72,10 @@ func getAllAuthors(ctx *gin.Context) {
 }
 
 func getAllBooks(ctx *gin.Context) {
-	db := ConnectDB()
-	defer db.Close()
+	db := ConnectDB() // Veritabanına bağlan
+	defer db.Close()  // Fonksiyon bitince veritabanı bağlantısını kapat
 
+	// Veritabanına sorguyu gönder
 	rows, err := db.Query(`SELECT "ID","bookName", author, quantity, description, published, page, "bookLanguage" FROM public."Books"`)
 
 	if err != nil {
@@ -84,7 +86,7 @@ func getAllBooks(ctx *gin.Context) {
 
 	var books []models.Book
 
-	for rows.Next() {
+	for rows.Next() { // Gelen verileri books dizisine ata
 		var bk models.Book
 		err := rows.Scan(&bk.ID, &bk.BookName, &bk.Author, &bk.Quantity, &bk.Description, &bk.Published, &bk.Page, &bk.Language)
 
@@ -96,7 +98,7 @@ func getAllBooks(ctx *gin.Context) {
 		books = append(books, bk)
 	}
 
-	ctx.JSON(http.StatusOK, books)
+	ctx.JSON(http.StatusOK, books) // kitapları döndür
 }
 
 func getBookById(ctx *gin.Context) {
@@ -231,7 +233,8 @@ func insertBook(ctx *gin.Context) {
 		book.BookName, book.Author, book.Quantity,
 		book.Description, book.Published, book.Page, book.Language)
 
-	result, err := db.Exec(`INSERT INTO public."Books" ("bookName", "author", "quantity", "description", "published", "page", "bookLanguage") values ($1, $2, $3, $4, $5, $6, $7)`, book.BookName, book.Author, book.Quantity, book.Description, book.Published, book.Page, book.Language)
+	result, err := db.Exec(`INSERT INTO public."Books" ("bookName", "author", "quantity", "description", "published", "page", "bookLanguage") values 
+	($1, $2, $3, $4, $5, $6, $7)`, book.BookName, book.Author, book.Quantity, book.Description, book.Published, book.Page, book.Language)
 
 	if err != nil {
 		log.Println("Insert Error", err)

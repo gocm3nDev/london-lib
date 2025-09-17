@@ -159,8 +159,31 @@ func removeBookById(ctx *gin.Context) {
 	} else if rowsAffected == 0 {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "no record found to delete"})
 	}
+}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "customer deleted successfully"})
+func registerUser(ctx *gin.Context) {
+	db := ConnectDB()
+	defer db.Close()
+
+	var newUser models.User
+
+	err := ctx.ShouldBindJSON(&newUser)
+	if err != nil {
+		ctx.HTML(http.StatusInternalServerError, "500.html", gin.H{"message": err.Error()})
+		return
+	}
+
+	rows, err := db.Exec(`INSERT INTO public."Users" ("name", "email", "passwd_hash", "is_active", "created_at") values ($1, $2, $3, $4, $5)`, newUser.Name, newUser.Email, newUser.PasswordHash, newUser.IsActive, newUser.CreatedAt)
+
+	if err != nil {
+		log.Println("Insert error", err)
+		return
+	}
+
+	rowsAffected, err := rows.RowsAffected()
+	fmt.Println("Inserted rows", rowsAffected)
+
+	ctx.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("%d row(s) inserted", rowsAffected)})
 }
 
 func insertLanguage(ctx *gin.Context) {
@@ -268,8 +291,8 @@ func main() {
 	router.POST("/authors", insertAuthor)
 	router.POST("/languages", insertLanguage)
 	router.DELETE("/books/:id", removeBookById)
-
 	router.GET("/authors", getAllAuthors)
+	router.POST("/users", registerUser)
 
 	err := router.Run(":8080")
 	if err != nil {
